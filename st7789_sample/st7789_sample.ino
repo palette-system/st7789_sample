@@ -15,17 +15,10 @@ void setup()
 
     Serial.begin(115200);
 
-    // We start by connecting to a WiFi network
-    Serial.println();
-    Serial.println();
-    Serial.println("WiFi Connecting.");
-
-
-    tft.init(135, 240); // initialize a ST7789 chip, 240x240 pixels
+    tft.init(135, 240);
     delay(1000);
     tft.fillScreen(GREEN);
     delay(1000);
-    // tft.setRotation(3);
 
     Serial.printf("size: %D %D\n", tft.width(), tft.height());
 }
