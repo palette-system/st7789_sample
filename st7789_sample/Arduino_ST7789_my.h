@@ -83,7 +83,7 @@ class Arduino_ST7789 : public Adafruit_GFX {
            fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color),
            setRotation(uint8_t r),
            invertDisplay(boolean i),
-           viewBMP(int16_t x, int16_t y, uint8_t * bmp_data),
+           viewBMP(int16_t x, int16_t y, uint8_t * bmp_data, uint8_t opa),
        init(uint16_t width, uint16_t height);
   uint16_t Color565(uint8_t r, uint8_t g, uint8_t b);
   uint16_t color565(uint8_t r, uint8_t g, uint8_t b) { return Color565(r, g, b); } 

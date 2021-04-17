@@ -21,7 +21,7 @@ void setup()
 
     tft.init(135, 240);
     delay(1000);
-    tft.fillScreen(GREEN);
+    tft.fillScreen(BLACK);
     delay(1000);
 
     Serial.printf("size: %D %D\n", tft.width(), tft.height());
@@ -31,6 +31,7 @@ void setup()
 void loop()
 {
     int i;
+    /*
     tft.fillScreen(BLUE);
     delay(1000);
     for (i=0; i<10; i++) {
@@ -56,9 +57,25 @@ void loop()
     delay(1000);
     tft.fillScreen(WHITE);
     delay(1000);
-    tft.viewBMP(135, 240, (uint8_t *)gimp_image);
-    delay(10000);
-    tft.viewBMP(135, 240, (uint8_t *)gimp_image2);
-    delay(10000);
+    */
+    for (i=0; i<=10; i++) {
+        tft.viewBMP(135, 240, (uint8_t *)gimp_image, i);
+        delay(200);
+    }
+    delay(3000);
+    for (i=10; i>=0; i--) {
+        tft.viewBMP(135, 240, (uint8_t *)gimp_image, i);
+        delay(200);
+    }
+    delay(600);
+    for (i=0; i<=10; i++) {
+        tft.viewBMP(135, 240, (uint8_t *)gimp_image2, i);
+        delay(200);
+    }
+    delay(3000);
+    for (i=10; i>=0; i--) {
+        tft.viewBMP(135, 240, (uint8_t *)gimp_image2, i);
+        delay(200);
+    }
     
 }

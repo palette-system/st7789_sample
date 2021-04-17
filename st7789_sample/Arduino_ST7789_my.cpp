@@ -286,24 +286,43 @@ uint16_t Arduino_ST7789::Color565(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
+uint16_t color_opa(uint8_t hi, uint8_t lo, uint8_t opa) {
+  uint8_t r = (hi & 0xF8) >> 3;
+  uint8_t g = ((hi & 0x07) << 3) | ((lo & 0xE0) >> 5);
+  uint8_t b = lo & 0x1F;
+  int ir = r * opa / 10;
+  int ig = g * opa / 10;
+  int ib = b * opa / 10;
+  return (ir << 11) | (ig << 5) | (ib);
+}
+
 void Arduino_ST7789::invertDisplay(boolean i) {
   writecommand(i ? ST7789_INVON : ST7789_INVOFF);
 }
 
-void Arduino_ST7789::viewBMP(int16_t x, int16_t y, uint8_t * bmp_data) {
-  uint8_t wbuf[512];
+void Arduino_ST7789::viewBMP(int16_t x, int16_t y, uint8_t * bmp_data, uint8_t opa) {
+  uint8_t wbuf[7120];
+  uint16_t c;
   int i,j,p;
   setAddrWindow(0, 0, x - 1, y - 1);
   digitalWrite(_dc, HIGH);
+  p = 0;
   for (i=0; i<y; i++) {
-    p = 0;
     for (j=0; j<x; j++) {
-      wbuf[p] = bmp_data[(i * 2 * 135) + (j*2) + 1];
+      c = color_opa(bmp_data[(i * 2 * 135) + (j*2) + 1], bmp_data[(i * 2 * 135) + (j*2)], opa);
+      wbuf[p] = c >> 8;
       p++;
-      wbuf[p] = bmp_data[(i * 2 * 135) + (j*2)];
+      wbuf[p] = c & 0xFF;
       p++;
+      if (p > 7110) {
+        SPI.writeBytes(wbuf, p);
+        p = 0;
+      }
     }
+  }
+  if (p > 0) {
     SPI.writeBytes(wbuf, p);
+    p = 0;
   }
   
   // SPI.writeBytes(gimp_image, (135 * 240 * 2));
