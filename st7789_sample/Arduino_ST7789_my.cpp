@@ -93,6 +93,8 @@ inline void Arduino_ST7789::spiwrite_color(uint16_t send_color, uint16_t send_si
   }
 }
 
+
+
 void Arduino_ST7789::writecommand(uint8_t c) {
 
   digitalWrite(_dc, LOW); // dc low はここだけ
@@ -286,6 +288,25 @@ uint16_t Arduino_ST7789::Color565(uint8_t r, uint8_t g, uint8_t b) {
 
 void Arduino_ST7789::invertDisplay(boolean i) {
   writecommand(i ? ST7789_INVON : ST7789_INVOFF);
+}
+
+void Arduino_ST7789::viewBMP(int16_t x, int16_t y, uint8_t * bmp_data) {
+  uint8_t wbuf[512];
+  int i,j,p;
+  setAddrWindow(0, 0, x - 1, y - 1);
+  digitalWrite(_dc, HIGH);
+  for (i=0; i<y; i++) {
+    p = 0;
+    for (j=0; j<x; j++) {
+      wbuf[p] = bmp_data[(i * 2 * 135) + (j*2) + 1];
+      p++;
+      wbuf[p] = bmp_data[(i * 2 * 135) + (j*2)];
+      p++;
+    }
+    SPI.writeBytes(wbuf, p);
+  }
+  
+  // SPI.writeBytes(gimp_image, (135 * 240 * 2));
 }
 
 /******** low level bit twiddling **********/

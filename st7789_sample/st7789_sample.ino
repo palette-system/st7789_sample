@@ -1,4 +1,8 @@
 #include "Arduino_ST7789_my.h"
+#include "gimp_image.h"
+#include "gimp_image2.h"
+
+
 
 #define TFT_DC 22   // ?
 #define TFT_RST 21  // LCDのリセット用（SPI関係ない）
@@ -38,10 +42,10 @@ void loop()
     }
     delay(1000);
     for (i=0; i<10; i++) {
-        tft.drawLine(10, (i * 20) + 20, 110, (i * 20) + 20, RED);
-        tft.drawLine(10, (i * 20) + 30, 110, (i * 20) + 30, RED);
-        tft.drawLine(10, (i * 20) + 20, 10, (i * 20) + 30, RED);
-        tft.drawLine(110, (i * 20) + 20, 110, (i * 20) + 30, RED);
+        tft.drawLine(10, (i * 20) + 20, 110, (i * 20) + 20, WHITE);
+        tft.drawLine(10, (i * 20) + 30, 110, (i * 20) + 30, WHITE);
+        tft.drawLine(10, (i * 20) + 20, 10, (i * 20) + 30, WHITE);
+        tft.drawLine(110, (i * 20) + 20, 110, (i * 20) + 30, WHITE);
         
         delay(30);
     }
@@ -52,9 +56,9 @@ void loop()
     delay(1000);
     tft.fillScreen(WHITE);
     delay(1000);
-    tft.fillScreen(CYAN);
-    delay(1000);
-    tft.fillScreen(MAGENTA);
-    delay(1000);
+    tft.viewBMP(135, 240, (uint8_t *)gimp_image);
+    delay(10000);
+    tft.viewBMP(135, 240, (uint8_t *)gimp_image2);
+    delay(10000);
     
 }
