@@ -20,13 +20,33 @@ void setup()
     Serial.begin(115200);
 
     tft.init(135, 240);
-    delay(1000);
     tft.fillScreen(BLACK);
     delay(1000);
 
     Serial.printf("size: %D %D\n", tft.width(), tft.height());
 }
 
+
+void text_test() {
+  tft.setCursor(0, 0);
+  tft.setTextColor(WHITE);
+  tft.setTextWrap(true);
+  delay(500);
+  tft.setTextSize(2);
+  tft.setTextColor(WHITE);
+  tft.print("2 Hello World!\n");
+  delay(500);
+  tft.setTextSize(3);
+  tft.setTextColor(GREEN);
+  tft.print("3 Hello World!\n");
+  delay(500);
+  tft.setTextSize(4);
+  tft.setTextColor(BLUE);
+  tft.print("4 Hello World!\n");
+  delay(500);
+  
+  delay(5000);
+}
 
 void loop()
 {
@@ -68,11 +88,13 @@ void loop()
         delay(200);
     }
     delay(600);
+    text_test();
     for (i=0; i<=10; i++) {
         tft.viewBMP(135, 240, (uint8_t *)gimp_image2, i);
         delay(200);
     }
     delay(3000);
+    text_test();
     for (i=10; i>=0; i--) {
         tft.viewBMP(135, 240, (uint8_t *)gimp_image2, i);
         delay(200);
