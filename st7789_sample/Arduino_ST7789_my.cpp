@@ -300,16 +300,55 @@ void Arduino_ST7789::invertDisplay(boolean i) {
   writecommand(i ? ST7789_INVON : ST7789_INVOFF);
 }
 
-void Arduino_ST7789::viewBMP(int16_t x, int16_t y, uint8_t * bmp_data, uint8_t opa) {
+void Arduino_ST7789::viewBMP(int16_t x, int16_t y, int16_t w, int16_t h, uint8_t * bmp_data, uint8_t opa) {
   uint8_t wbuf[7120];
   uint16_t c;
   int i,j,p;
-  setAddrWindow(0, 0, x - 1, y - 1);
+  int vx, vy, vw, vh;
+  if ((x + w) > _width) {
+  	if (x < 0) {
+  		vx = 0;
+  		vw = _width - 1;
+  	} else {
+  		vx = x;
+  		vw = _width - x - 1;
+  	}
+  } else {
+  	if (x < 0) {
+  		vx = 0;
+  		vw = w + x - 1;
+  	} else {
+  		vx = x;
+  		vw = w - 1;
+  	}
+  }
+  if ((y + h) > _height) {
+  	if (y < 0) {
+  		vy = 0;
+  		vh = _height - 1;
+  	} else {
+  		vy = y;
+  		vh = _height - y - 1;
+  	}
+  } else {
+  	if (y < 0) {
+  		vy = 0;
+  		vh = h + y - 1;
+  	} else {
+  		vy = y;
+  		vh = h - 1;
+  	}
+  }
+  setAddrWindow(vx, vy, vx + vw, vy + vh);
   digitalWrite(_dc, HIGH);
   p = 0;
-  for (i=0; i<y; i++) {
-    for (j=0; j<x; j++) {
-      c = color_opa(bmp_data[(i * 2 * 135) + (j*2) + 1], bmp_data[(i * 2 * 135) + (j*2)], opa);
+  for (i=0; i<h; i++) {
+    if ((i + y) > (vy + vh)) continue;
+  	if (y < 0 && (i + y) < 0) continue;
+    for (j=0; j<w; j++) {
+      if ((j + x) > (vx + vw)) continue;
+      if (x < 0 && (j + x) < 0) continue;
+      c = color_opa(bmp_data[(i * 2 * w) + (j*2) + 1], bmp_data[(i * 2 * w) + (j*2)], opa);
       wbuf[p] = c >> 8;
       p++;
       wbuf[p] = c & 0xFF;
@@ -324,9 +363,10 @@ void Arduino_ST7789::viewBMP(int16_t x, int16_t y, uint8_t * bmp_data, uint8_t o
     SPI.writeBytes(wbuf, p);
     p = 0;
   }
-  
-  // SPI.writeBytes(gimp_image, (135 * 240 * 2));
 }
+
+
+
 
 /******** low level bit twiddling **********/
 

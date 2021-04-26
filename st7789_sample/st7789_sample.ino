@@ -4,11 +4,17 @@
 
 
 
-#define TFT_DC 22   // ?
-#define TFT_RST 21  // LCDのリセット用（SPI関係ない）
+// #define TFT_DC 22   // ?
+// #define TFT_RST 21  // LCDのリセット用（SPI関係ない）
+// #define TFT_CS -1   // blank SS
+// #define TFT_MOSI 23 // SDA for hardware SPI data pin (all of available pins)
+// #define TFT_SCLK 18 // SCL for hardware SPI sclk pin (all of available pins)
+
+#define TFT_DC 26   // ?
+#define TFT_RST 25  // LCDのリセット用（SPI関係ない）
 #define TFT_CS -1   // blank SS
-#define TFT_MOSI 23 // SDA for hardware SPI data pin (all of available pins)
-#define TFT_SCLK 18 // SCL for hardware SPI sclk pin (all of available pins)
+#define TFT_MOSI 21 // SDA for hardware SPI data pin (all of available pins)
+#define TFT_SCLK 22 // SCL for hardware SPI sclk pin (all of available pins)
 
 Arduino_ST7789 tft = Arduino_ST7789(TFT_DC, TFT_RST, TFT_MOSI, TFT_SCLK, TFT_CS); //for display with CS pin
 
@@ -79,24 +85,24 @@ void loop()
     delay(1000);
     */
     for (i=0; i<=10; i++) {
-        tft.viewBMP(135, 240, (uint8_t *)gimp_image, i);
+        tft.viewBMP(0, 0, 135, 240, (uint8_t *)gimp_image, i);
         delay(200);
     }
     delay(3000);
     for (i=10; i>=0; i--) {
-        tft.viewBMP(135, 240, (uint8_t *)gimp_image, i);
-        delay(200);
+        tft.viewBMP(0, 0, 135, 240, (uint8_t *)gimp_image, i);
+        delay(100);
     }
     delay(600);
     text_test();
     for (i=0; i<=10; i++) {
-        tft.viewBMP(135, 240, (uint8_t *)gimp_image2, i);
-        delay(200);
+        tft.viewBMP(0, 0, 135, 240, (uint8_t *)gimp_image2, i);
+        delay(100);
     }
     delay(3000);
     text_test();
     for (i=10; i>=0; i--) {
-        tft.viewBMP(135, 240, (uint8_t *)gimp_image2, i);
+        tft.viewBMP(0, 0, 135, 240, (uint8_t *)gimp_image2, i);
         delay(200);
     }
     
